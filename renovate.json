@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "abandonmentThreshold": "2 years",
+  "packageRules": [
+    {
+      "matchDatasources": ["repology"],
+      "separateMultipleMajor": false,
+      "groupName": "packages",
+      "commitBodyTable": true
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*?(suite=(?<suite>.*?))?\\s*depName=(?<depName>.*?)?\\sENV .*?_VERSION=\"(?<currentValue>.*)\""
+      ],
+      "registryUrlTemplate": "https://deb.debian.org/debian?suite={{#if suite }}{{suite}}{{else}}stable{{/if}}&components=main,contrib,non-free&binaryArch=amd64",
+      "datasourceTemplate": "deb"
+    }
+  ],
+  "maxMajorIncrement": 0,
+  "osvVulnerabilityAlerts": true,
+  "separateMultipleMajor": true,
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 10,
+  "reviewersFromCodeOwners": true
+}
