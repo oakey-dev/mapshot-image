@@ -45,14 +45,14 @@ get_factorio_version_from_location() {
     FACTORIO_TOKEN="${FACTORIO_TOKEN:?"ERROR missing token for download of factorio"}"
     url="https://www.factorio.com/get-download/${FACTORIO_VERSION}/expansion/linux64?username=${FACTORIO_USERNAME}&token=${FACTORIO_TOKEN}"
 
-    curl -fsSI "${url}" |
+    curl --fail --silent --show-error --head "${url}" |
         sed -En 's/^[Ll]ocation:.*\/releases\/([0-9]+\.[0-9]+\.[0-9]+)_.*/\1/p' |
         head -n1 |
 	tr -d '\r'
 }
 
 download_factorio() {
-    local archive="${MAPSHOT_ROOT_DIRECTORY}/factorio-linux64.tar.xz"
+    local archive="${MAPSHOT_ROOT_DIRECTORY}/factorio-linux64-${FACTORIO_VERSION}.tar.xz"
     local extract_dir
     local install_dir="${MAPSHOT_ROOT_DIRECTORY}/factorio"
     local url
@@ -65,21 +65,23 @@ download_factorio() {
 
     echo "Downloading Factorio ${FACTORIO_VERSION}..."
 
-    if ! curl -fsSL "${url}" -o "${archive}"; then
+    if ! curl --fail --silent --show-error --continue-at - --location "${url}" --output "${archive}"; then
         echo "Failed to download Factorio; please check your credentials" >&2
-        rm -rf "${archive}" "${extract_dir}"
+        rm -r "${extract_dir}"
         return 1
     fi
 
     if ! tar -xJf "${archive}" -C "${extract_dir}"; then
         echo "Failed to extract Factorio archive" >&2
-        rm -rf "${archive}" "${extract_dir}"
+        rm -r "${extract_dir}"
+        rm "${MAPSHOT_ROOT_DIRECTORY}/factorio-linux64-"*".tar.xz"
         return 1
     fi
 
     if [[ ! -x "${extract_dir}/factorio/bin/x64/factorio" ]]; then
         echo "Downloaded archive does not contain a valid Factorio binary" >&2
-        rm -rf "${archive}" "${extract_dir}"
+        rm -r "${extract_dir}"
+        rm "${MAPSHOT_ROOT_DIRECTORY}/factorio-linux64-"*".tar.xz"
         return 1
     fi
 
@@ -91,7 +93,8 @@ download_factorio() {
     [[ -d "${MAPSHOT_FACTORIO_DATADIR}/mods" ]] || mkdir "${MAPSHOT_FACTORIO_DATADIR}/mods"
     echo "{}" >"${MAPSHOT_FACTORIO_DATADIR}/mods/mod-list.json"
 
-    rm -rf "${archive}" "${extract_dir}"
+    rm -r "${extract_dir}"
+    rm "${MAPSHOT_ROOT_DIRECTORY}/factorio-linux64-"*".tar.xz"
 }
 
 if [[ ! -f "${MAPSHOT_FACTORIO_BINARY}" ]]; then
