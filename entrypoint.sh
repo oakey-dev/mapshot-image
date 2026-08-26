@@ -9,6 +9,7 @@ set -euo pipefail
 : "${MAPSHOT_FACTORIO_BINARY:=${MAPSHOT_FACTORIO_DATADIR}/bin/x64/factorio}"
 : "${MAPSHOT_WORK_DIR:=${MAPSHOT_FACTORIO_DATADIR}}"
 : "${MAPSHOT_MODE:=render}"
+: "${MAPSHOT_BINARY:=/usr/local/bin/mapshot}"
 
 : "${MAPSHOT_AREA:=all}"
 : "${MAPSHOT_JPG_QUALITY:=95}"
@@ -103,7 +104,7 @@ if [[ "${MAPSHOT_MODE}" == "render" ]]; then
     if [[ "${checksum}" == "${last}" ]]; then
         echo "savegame did not change, nothing to do"
     else
-        xvfb-run mapshot render --logtostderr \
+        xvfb-run "${MAPSHOT_BINARY}" render --logtostderr \
             --factorio_binary "${MAPSHOT_FACTORIO_BINARY}" \
             --factorio_datadir "${MAPSHOT_FACTORIO_DATADIR}" \
             --area "${MAPSHOT_AREA}" \
@@ -121,7 +122,7 @@ if [[ "${MAPSHOT_MODE}" == "render" ]]; then
     echo "... done"
 
 elif [[ "${MAPSHOT_MODE}" == "serve" ]]; then
-    exec mapshot serve \
+    exec "${MAPSHOT_BINARY}" serve \
         --factorio_binary "${MAPSHOT_FACTORIO_BINARY}" \
         --factorio_datadir "${MAPSHOT_FACTORIO_DATADIR}" \
         --work_dir "${MAPSHOT_WORK_DIR}"
