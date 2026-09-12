@@ -9,7 +9,7 @@ COPY --chmod=755 entrypoint.sh http-newest.awk /usr/local/bin/
 # renovate: suite=trixie depName=ca-certificates
 ENV CA_CERTIFICATES_VERSION="20250419"
 # renovate: suite=trixie depName=curl
-ENV CURL_VERSION="8.14.1-2+deb13u4"
+ENV CURL_VERSION="8.14.1-2+deb13u5"
 # renovate: suite=trixie depName=file
 ENV FILE_VERSION="1:5.46-5"
 # renovate: suite=trixie depName=gawk
