@@ -45,8 +45,9 @@ RUN apt-get update \
     "xauth=${XAUTH_VERSION}" \
     "xvfb=${XVFB_VERSION}" \
     "xz-utils=${XZ_UTILS_VERSION}" \
-  && rm -rf /var/lib/apt/lists/* \
-  && curl -fsSL -o /usr/local/bin/mapshot "https://github.com/Palats/mapshot/releases/download/${MAPSHOT_VERSION}/mapshot-linux" \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL -o /usr/local/bin/mapshot "https://github.com/Palats/mapshot/releases/download/${MAPSHOT_VERSION}/mapshot-linux" \
   && chmod +x /usr/local/bin/mapshot
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
