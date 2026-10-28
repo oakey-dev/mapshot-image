@@ -15,10 +15,10 @@ RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y \
     "ca-certificates=20250419" \
-    "curl=8.14.1-2+deb13u5" \
+    "curl=8.14.1-2+deb13u7" \
     "file=1:5.46-5" \
     "gawk=1:5.2.1-2+b1" \
-    "jq=1.7.1-6+deb13u3" \
+    "jq=1.7.1-6+deb13u4" \
     "procps=2:4.0.4-9" \
     "psmisc=23.7-2" \
     "xauth=1:1.1.2-1.1" \
