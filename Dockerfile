@@ -1,31 +1,10 @@
-FROM debian:13.7-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad
+FROM debian:13.7-slim@sha256:f6b08b09a05725f9431502d3b5714f5c4576e82c1a84fa1debe0c24a7e0c3ec4
 
 # Add this label to your Dockerfile
-LABEL org.opencontainers.image.source=https://github.com/oakey-dev/factorio-image
+LABEL org.opencontainers.image.source=https://github.com/oakey-dev/mapshot-image
 
 # Copy entrypoint script into the image
 COPY --chmod=755 entrypoint.sh http-newest.awk /usr/local/bin/
-
-# renovate: suite=trixie depName=ca-certificates
-ENV CA_CERTIFICATES_VERSION="20250419"
-# renovate: suite=trixie depName=curl
-ENV CURL_VERSION="8.14.1-2+deb13u5"
-# renovate: suite=trixie depName=file
-ENV FILE_VERSION="1:5.46-5"
-# renovate: suite=trixie depName=gawk
-ENV GAWK_VERSION="1:5.2.1-2+b1"
-# renovate: suite=trixie depName=jq
-ENV JQ_VERSION="1.7.1-6+deb13u3"
-# renovate: suite=trixie depName=procps
-ENV PROCPS_VERSION="2:4.0.4-9"
-# renovate: suite=trixie depName=psmisc
-ENV PSMISC_VERSION="23.7-2"
-# renovate: suite=trixie depName=xauth
-ENV XAUTH_VERSION="1:1.1.2-1.1"
-# renovate: suite=trixie depName=xvfb
-ENV XVFB_VERSION="2:21.1.16-1.3+deb13u3"
-# renovate: suite=trixie depName=xz-utils
-ENV XZ_UTILS_VERSION="5.8.1-1+deb13u1"
 
 # renovate: datasource=git-tags depName=https://github.com/Palats/mapshot
 ENV MAPSHOT_VERSION="0.0.28"
@@ -35,19 +14,19 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y \
-    "ca-certificates=${CA_CERTIFICATES_VERSION}" \
-    "curl=${CURL_VERSION}" \
-    "file=${FILE_VERSION}" \
-    "gawk=${GAWK_VERSION}" \
-    "jq=${JQ_VERSION}" \
-    "procps=${PROCPS_VERSION}" \
-    "psmisc=${PSMISC_VERSION}" \
-    "xauth=${XAUTH_VERSION}" \
-    "xvfb=${XVFB_VERSION}" \
-    "xz-utils=${XZ_UTILS_VERSION}" \
+    "ca-certificates=20250419" \
+    "curl=8.14.1-2+deb13u5" \
+    "file=1:5.46-5" \
+    "gawk=1:5.2.1-2+b1" \
+    "jq=1.7.1-6+deb13u3" \
+    "procps=2:4.0.4-9" \
+    "psmisc=23.7-2" \
+    "xauth=1:1.1.2-1.1" \
+    "xvfb=2:21.1.16-1.3+deb13u3" \
+    "xz-utils=5.8.1-1+deb13u1" \
   && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL -o /usr/local/bin/mapshot "https://github.com/Palats/mapshot/releases/download/${MAPSHOT_VERSION}/mapshot-linux" \
+RUN curl -fsSL -o /usr/local/bin/mapshot "https://github.com/Palats/mapshot/releases/download/0.0.28/mapshot-linux" \
   && chmod +x /usr/local/bin/mapshot
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

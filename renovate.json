@@ -6,21 +6,45 @@
   "abandonmentThreshold": "2 years",
   "packageRules": [
     {
-      "matchDatasources": ["repology"],
+      "matchDatasources": ["deb"],
       "separateMultipleMajor": false,
       "groupName": "packages",
-      "commitBodyTable": true
+      "commitBodyTable": true,
+      "registryUrls": [
+        "https://deb.debian.org/debian?suite=Debian13.7&components=main,contrib,non-free&binaryArch=amd64"
+      ]
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "pinDigests": true
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchDatasources": ["docker"],
+      "groupName": "packages"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchDatasources": ["docker"],
+      "groupName": "packages",
+      "pinDigests": true
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^Dockerfile$/"],
+      "description": "Update Debian suite version in registry URL",
+      "fileMatch": ["^renovate\\.json$"],
       "matchStrings": [
-        "#\\s*renovate:\\s*?(suite=(?<suite>.*?))?\\s*depName=(?<depName>.*?)?\\sENV .*?_VERSION=\"(?<currentValue>.*)\""
+        "\"registryUrls\"\\s*:\\s*\\[\\s*\"https://deb\\.debian\\.org/debian\\?suite=Debian(?<currentValue>(?<major>\\d+)\\.(?<minor>\\d+))"
       ],
-      "registryUrlTemplate": "https://deb.debian.org/debian?suite={{#if suite }}{{suite}}{{else}}stable{{/if}}&components=main,contrib,non-free&binaryArch=amd64",
-      "datasourceTemplate": "deb"
+      "currentValueTemplate": "{{{currentValue}}}",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "debian",
+      "versioningTemplate": "regex:(?<major>\\d+)\\.(?<minor>\\d+)",
+      "autoReplaceStringTemplate": "\"registryUrls\": [\n        \"https://deb.debian.org/debian?suite=Debian{{{newMajor}}}.{{{newMinor}}}&components=main,contrib,non-free&binaryArch=amd64\""
     }
   ],
   "maxMajorIncrement": 0,
